@@ -1,13 +1,17 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
+import { omit } from "lodash";
 
 import log from "../utils/logger";
+import { createUser } from "../service/user.service";
+import { CreateUserInput } from "../schema/user.schema";
 
 
-export async function(req: Request, res: Response) {
+export const createUserHandler: RequestHandler = async (req: Request<{}, {}, CreateUserInput['body']>, res: Response): Promise<void> => {
     try {
-
-    } catch(error) {
-        log.error(error);
-        res.status(409);
+        const user =  await createUser(req.body);
+        res.status(201).send(omit(user.toJSON(), 'password'));
+    } catch(error: any) {
+        log.error(error.message);
+        res.status(409).send(error.message);
     }
 }

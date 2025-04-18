@@ -9,6 +9,8 @@ const app = express();
 
 const port = config.get<number>('port');
 
+app.use(express.json())
+
 routes(app);
 
 app.listen(port, async () => {

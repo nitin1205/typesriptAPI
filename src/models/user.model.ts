@@ -18,6 +18,15 @@ interface User {
     comparePassword(candidatePassword: string): Promise<boolean>;
   }
 
+  export type UserInput = Omit<UserDocument, 
+  "_id" | 
+  "createdAt" | 
+  "updatedAt" | 
+  "isModified" | 
+  "save" | 
+  "comparePassword"
+>;
+
 
  
 const userSchema = new Schema({
@@ -48,7 +57,7 @@ userSchema.pre('save', async function(next: CallbackWithoutResultAndOptionalErro
 
     const salt = await bcrypt.genSalt(config.get<number>('saltWorkFactor'));
     const hash = await bcrypt.hash(user.password, salt);
-
+    user.password = hash;
     return next();
 })
 
