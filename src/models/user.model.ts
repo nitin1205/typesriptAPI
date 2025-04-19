@@ -11,7 +11,7 @@ interface User {
     updatedAt?: Date;
   }
   
-  interface UserDocument extends User {
+  export interface UserDocument extends User {
     _id: Types.ObjectId;
     isModified(field: string): boolean;
     save(): Promise<UserDocument>;
@@ -66,6 +66,6 @@ userSchema.methods.comparePassword = async function(candidatePassword: string): 
     return await bcrypt.compare(candidatePassword, user.password).catch(e => false);
 }
 
-const userModel = model<UserDocument>('User', userSchema);
+const UserModel = model<UserDocument>('User', userSchema);
 
-export default userModel
+export default UserModel
