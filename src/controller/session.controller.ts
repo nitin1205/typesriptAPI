@@ -2,14 +2,14 @@ import { Request, Response, RequestHandler } from "express";
 import config from 'config';
 
 import { validatePassword } from "../service/user.service";
-import { createSession } from "../service/session.service";
+import { createSession, findSessions } from "../service/session.service";
 import { signJwt } from "../utils/jwt.utils";
 import { CreateSessionInput } from "../schema/session.schema";
 
 export const createUserSessionHandler: RequestHandler = async (req: Request<{}, {}, CreateSessionInput['body']>, res: Response): Promise<void> =>{
     const user = await validatePassword(req.body);
     if(!user) res.status(401).send('Invalid email or password');
-     
+    
     if(user){
         const session = await createSession(user._id as unknown as string, req.get('user-agent') || '');
         const accessToken = signJwt(
@@ -19,11 +19,18 @@ export const createUserSessionHandler: RequestHandler = async (req: Request<{}, 
         
         const refreshToken = signJwt(
             { ...user, session: session._id },
-            { expiresIn: config.get('refershTokenTtl') } // 1 yr refreshTokenTTl
+            { expiresIn: config.get('refreshTokenTtl') } // 1 yr refreshTokenTTl
         )
 
         res.send({ accessToken, refreshToken });
+    }
+};
 
 
-    } 
+export const getUserSessionsHandler: RequestHandler = async(req: Request, res: Response): Promise<void> => {
+  const userId = res.locals.user._id;
+  console.log('userId:  ',userId)
+  const session = await findSessions({user: userId, valid: true })
+
+  res.send(session);
 }
