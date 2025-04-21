@@ -5,7 +5,7 @@ import { verifyJwt } from "../utils/jwt.utils";
 const deserializeUser = (req: Request, res: Response, next: NextFunction) => {
     const accessToken = get(req, 'headers.authorization', '').replace(/^Bearer\s/, '');
 
-    if(!accessToken) next()
+    if(!accessToken) return next()
 
     const {decoded, expired} = verifyJwt(accessToken)
 
@@ -14,7 +14,7 @@ const deserializeUser = (req: Request, res: Response, next: NextFunction) => {
         return next();
     }
 
-    next();
+    return next();
 };
 
 

@@ -1,4 +1,4 @@
-import { Request, RequestHandler, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 
 import log from "../utils/logger";
 import { createUser } from "../service/user.service";

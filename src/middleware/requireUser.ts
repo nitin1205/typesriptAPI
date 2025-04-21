@@ -5,7 +5,7 @@ const requireUser = (req: Request, res: Response, next: NextFunction) => {
 
     if(!user) res.sendStatus(403);
 
-    next();
+    return next();
 };
 
 export default requireUser;
