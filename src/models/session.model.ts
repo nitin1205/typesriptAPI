@@ -3,7 +3,7 @@ import { Schema, model, ObjectId} from "mongoose";
 import { UserDocument } from "./user.model";
 
 export interface SessionDocument {
-    // _id: ObjectId;
+    _id: ObjectId;
     user: UserDocument['_id'];
     valid: boolean;
     userAgent: string;
@@ -21,6 +21,6 @@ const sessionSchema = new Schema({
     timestamps: true
 });
 
-const SessionModel = model('Session', sessionSchema);
+const SessionModel = model<SessionDocument>('Session', sessionSchema);
 
 export default SessionModel;
