@@ -13,6 +13,7 @@ export const createProductHandler: RequestHandler = async(
     const product = await createProduct({ ...body, user: userId });
 
     res.send(product);
+    return;
 }
 
 
@@ -26,13 +27,20 @@ export const updateProductHandler: RequestHandler<UpdateProductInput['params']> 
 
     const product = await findProduct({ productId });
 
-    if(!product) res.sendStatus(404);
+    if(!product) {
+        res.sendStatus(404);
+        return;
+    } 
 
-    if(String(product?.user) !== userId) res.sendStatus(403);
+    if(String(product?.user) !== userId) {
+        res.sendStatus(403);
+        return;
+    }
 
     const updatedProduct = await findAndUpdateProduct({ productId }, update, { new: true });
 
     res.send(updatedProduct);
+    return;
 }
 
 
@@ -44,9 +52,13 @@ export const getProductHandler: RequestHandler<UpdateProductInput['params']> = a
 
     const product = await findProduct({ productId });
 
-    if(!product) res.sendStatus(404);
+    if(!product){
+        res.sendStatus(404);
+        return;
+    } 
 
     res.send(product);
+    return;
 }
 
 
@@ -59,11 +71,18 @@ export const deleteProductHandler: RequestHandler<UpdateProductInput['params']> 
 
     const product = await findProduct({ productId });
 
-    if(!product) res.sendStatus(404);
+    if(!product){
+        res.sendStatus(404);
+        return;
+    } 
 
-    if(String(product?.user) !== userId) res.sendStatus(403);
+    if(String(product?.user) !== userId) {
+        res.sendStatus(403);
+        return;
+    } 
 
     await deleteProduct({ productId });
 
     res.sendStatus(200);
+    return;
 }

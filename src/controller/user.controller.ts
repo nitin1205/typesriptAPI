@@ -9,8 +9,10 @@ export const createUserHandler: RequestHandler = async (req: Request<{}, {}, Cre
     try {
         const user =  await createUser(req.body);
         res.status(201).send(user);
+        return;
     } catch(error: any) {
         log.error(error.message);
         res.status(409).send(error.message);
+        return;
     }
 }

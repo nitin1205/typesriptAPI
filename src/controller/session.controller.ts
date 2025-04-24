@@ -8,7 +8,10 @@ import { CreateSessionInput } from "../schema/session.schema";
 
 export const createUserSessionHandler: RequestHandler = async (req: Request<{}, {}, CreateSessionInput['body']>, res: Response): Promise<void> =>{
     const user = await validatePassword(req.body);
-    if(!user) res.status(401).send('Invalid email or password');
+    if(!user){
+        res.status(401).send('Invalid email or password') 
+        return;  
+    } 
     
     if(user){
         const session = await createSession(user._id as unknown as string, req.get('user-agent') || '');
@@ -23,6 +26,7 @@ export const createUserSessionHandler: RequestHandler = async (req: Request<{}, 
         )
 
         res.send({ accessToken, refreshToken });
+        return;
     }
 };
 
@@ -32,6 +36,7 @@ export const getUserSessionsHandler: RequestHandler = async(req: Request, res: R
   const session = await findSessions({user: userId, valid: true })
 
   res.send(session);
+  return;
 }
 
 export const deleteSessionHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
@@ -42,4 +47,5 @@ export const deleteSessionHandler: RequestHandler = async (req: Request, res: Re
         accessToken: null,
         refreshToken: null
     });
+    return;
 }

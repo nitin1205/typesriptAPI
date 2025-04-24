@@ -11,9 +11,10 @@ export const valiadte = (schema: AnyZodObject) => (req: Request, res: Response, 
             params: req.params
         })
         next()
+        return;
     } catch(error: any) {
-        console.log('validate error')
-        log.error(error.message);
+        log.error('validate error', `ErrMsg:- ${error.message}`);
         res.status(400).send(error.message)
+        return
     }
 } 
